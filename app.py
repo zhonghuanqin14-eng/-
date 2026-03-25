@@ -7,20 +7,41 @@ st.set_page_config(
     layout="wide"
 )
 
-# 隐藏Streamlit的默认菜单和页脚
+# 隐藏Streamlit的默认菜单和页脚，并居中标题
 st.markdown("""
     <style>
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         .stApp header {visibility: hidden;}
         .stApp {margin-top: -50px;}
+        
+        /* 居中主标题 */
+        .stTitle {
+            text-align: center !important;
+            display: block !important;
+            width: 100% !important;
+        }
+        
+        /* 或者直接使用CSS选择器 */
+        h1 {
+            text-align: center !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-st.title("📦 Amazon 发货计划生成器 V23")
-st.markdown("---")
+# 使用HTML方式居中标题
+st.markdown("""
+    <h1 style="text-align: center; color: #1890ff; margin-bottom: 0;">
+        📦 Amazon 发货计划生成器 V23
+    </h1>
+    <hr style="margin-top: 10px; margin-bottom: 20px;">
+""", unsafe_allow_html=True)
 
-# 修复后的HTML代码 - 移除了sandbox参数
+# 或者使用st.title并配合CSS（二选一，下面这行注释掉）
+# st.title("📦 Amazon 发货计划生成器 V23")
+# st.markdown("---")
+
+# 修复后的HTML代码
 html_code = """
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -478,7 +499,7 @@ html_code = """
 </html>
 """
 
-# 使用components.html显示HTML内容，移除有问题的sandbox参数
+# 使用components.html显示HTML内容
 components.html(
     html_code, 
     height=950, 
