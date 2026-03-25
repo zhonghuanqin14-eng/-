@@ -20,7 +20,7 @@ st.markdown("""
 st.title("📦 Amazon 发货计划生成器 V23")
 st.markdown("---")
 
-# 修复后的HTML代码 - 解决了按钮点击问题
+# 修复后的HTML代码 - 移除了sandbox参数
 html_code = """
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -62,7 +62,7 @@ html_code = """
             background: #fafafa; 
             cursor: pointer; 
             transition: all 0.3s;
-            min-height: 120px;
+            min-height: 140px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -93,6 +93,7 @@ html_code = """
             font-weight: bold; 
             font-size: 16px;
             z-index: 10;
+            line-height: 1;
         }
         .remove-btn:hover {
             background: #ff7875;
@@ -163,7 +164,7 @@ html_code = """
             max-width: 100%;
         }
         .upload-icon {
-            font-size: 24px;
+            font-size: 32px;
             margin-bottom: 8px;
         }
         .upload-text {
@@ -477,12 +478,11 @@ html_code = """
 </html>
 """
 
-# 使用components.html显示HTML内容，增加高度并允许跨域
+# 使用components.html显示HTML内容，移除有问题的sandbox参数
 components.html(
     html_code, 
-    height=900, 
-    scrolling=True,
-    sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+    height=950, 
+    scrolling=True
 )
 
 # 添加使用说明
@@ -499,9 +499,11 @@ with st.expander("📖 使用说明"):
     - ✅ 自动匹配店铺名称规则
     - ✅ 支持多国家站点映射
     - ✅ 支持拖拽上传文件
+    - ✅ 点击或拖拽即可上传
     
     ### 注意事项：
     - 发货量必须大于0才会被导出
     - 模板文件的第一行会被作为表头
     - 支持 .xlsx, .xls, .csv 格式
+    - 历史记录保存在浏览器本地
     """)
