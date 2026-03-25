@@ -56,9 +56,15 @@ if st.button("🚀 合并生成发货表", type="primary", use_container_width=T
                 skipped_count = 0
                 
                 for idx, row in data1.iterrows():
-                    qty = int(row.get('发货量', 0)) if pd.notna(row.get('发货量', 0)) else 0
+                    # 获取发货量
+                    qty_val = row.get('发货量', 0)
+                    if pd.isna(qty_val):
+                        qty = 0
+                    else:
+                        qty = int(qty_val)
                     
                     if qty > 0:
+                        # 处理店铺名称
                         store_name = ""
                         country = str(row.get('国家', '')).lower()
                         cnt_map = {
@@ -67,13 +73,16 @@ if st.button("🚀 合并生成发货表", type="primary", use_container_width=T
                             "it": "IT", "es": "ES", "jp": "JP", "au": "AU"
                         }
                         
-                        if country in cnt_map:
-                            store_name = f"{row.get('账号', 'Unknown')}-{cnt_map[country]}"
-                        elif country == "eu":
-                            store_name = f"{row.get('账号', 'Unknown')}-DE"
-                        else:
-                            store_name = f"{row.get('账号', 'Unknown')}-{country.upper()}"
+                        account = str(row.get('账号', 'Unknown'))
                         
+                        if country in cnt_map:
+                            store_name = f"{account}-{cnt_map[country]}"
+                        elif country == "eu":
+                            store_name = f"{account}-DE"
+                        else:
+                            store_name = f"{account}-{country.upper()}"
+                        
+                        # 构建新行
                         new_row = {}
                         for h in template_headers:
                             hn = str(h).strip()
@@ -95,31 +104,34 @@ if st.button("🚀 合并生成发货表", type="primary", use_container_width=T
                         if qty == 0:
                             skipped_count += 1
                 
-                result_df = pd.DataFrame(final_rows)
-                
-                # 生成Excel文件
-                output = io.BytesIO()
-                with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    result_df.to_excel(writer, sheet_name='ShipPlan', index=False)
-                
-                output.seek(0)
-                
-                # 显示结果
-                st.success(f"✅ 处理完成！共生成 {processed_count} 条发货记录，跳过 {skipped_count} 条无效记录")
-                st.dataframe(result_df.head(10))
-                
-                # 下载按钮
-                today = datetime.now().strftime("%Y%m%d")
-                filename = f"发货计划_{today}.xlsx"
-                
-                st.download_button(
-                    label="📥 下载发货计划文件",
-                    data=output,
-                    file_name=filename,
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    use_container_width=True
-                )
-                
+                if len(final_rows) == 0:
+                    st.warning("⚠️ 没有找到发货量大于0的记录")
+                else:
+                    result_df = pd.DataFrame(final_rows)
+                    
+                    # 生成Excel文件
+                    output = io.BytesIO()
+                    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                        result_df.to_excel(writer, sheet_name='ShipPlan', index=False)
+                    
+                    output.seek(0)
+                    
+                    # 显示结果
+                    st.success(f"✅ 处理完成！共生成 {processed_count} 条发货记录")
+                    st.dataframe(result_df.head(10))
+                    
+                    # 下载按钮
+                    today = datetime.now().strftime("%Y%m%d")
+                    filename = f"发货计划_{today}.xlsx"
+                    
+                    st.download_button(
+                        label="📥 下载发货计划文件",
+                        data=output,
+                        file_name=filename,
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        use_container_width=True
+                    )
+                    
             except Exception as e:
                 st.error(f"处理失败: {str(e)}")
                 st.exception(e)
