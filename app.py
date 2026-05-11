@@ -37,10 +37,6 @@ st.markdown("""
     <hr style="margin-top: 10px; margin-bottom: 20px;">
 """, unsafe_allow_html=True)
 
-# 或者使用st.title并配合CSS（二选一，下面这行注释掉）
-# st.title("📦 Amazon 发货计划生成器 V23")
-# st.markdown("---")
-
 # 修复后的HTML代码
 html_code = """
 <!DOCTYPE html>
@@ -256,7 +252,8 @@ html_code = """
         "laxdacee": { "us": "Laxdacee-US", "ca": "Laxdacee-CA" },
         "byonebye": { "us": "Byonebye-US", "ca": "Byonebye-CA" },
         "cawiew": { "us": "CAWIEW-US", "ca": "CAWIEW-CA" },
-        "shunhuix": { "de": "SHUNHUIX-DE", "uk": "SHUNHUIX-UK", "eu": "SHUNHUIX-DE" }
+        "shunhuix": { "de": "SHUNHUIX-DE", "uk": "SHUNHUIX-UK", "eu": "SHUNHUIX-DE" },
+        "huglyis": { "us": "Huglyis-US", "ca": "Huglyis-CA" }  // 新增 HUGLYIS 映射
     };
 
     // 初始化
@@ -521,6 +518,11 @@ with st.expander("📖 使用说明"):
     - ✅ 支持多国家站点映射
     - ✅ 支持拖拽上传文件
     - ✅ 点击或拖拽即可上传
+    
+    ### 店铺映射规则：
+    - HUGLYIS (us) → Huglyis-US
+    - HUGLYIS (ca) → Huglyis-CA
+    - 其他店铺按照配置规则自动映射
     
     ### 注意事项：
     - 发货量必须大于0才会被导出
